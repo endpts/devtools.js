@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/endpts/node-devtools#readme",
   "devDependencies": {
+    "@endpts/types": "^1.0.0",
     "@types/node": "^18.11.18",
     "typescript": "^4.9.4"
   },
