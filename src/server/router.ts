@@ -1,4 +1,6 @@
 import { IncomingMessage, ServerResponse } from "node:http";
+import { Writable } from "node:stream";
+
 import { EndptsRequest } from "./request.js";
 
 import type { Logger } from "../logger.js";
@@ -59,9 +61,13 @@ export class Router {
     handlerResponse.headers.forEach((value, key) => {
       res.setHeader(key, value);
     });
-    res.write(await handlerResponse.text());
 
-    res.end();
+    if (handlerResponse.body === null) {
+      res.end();
+      return;
+    }
+
+    return handlerResponse.body.pipeTo(Writable.toWeb(res));
   }
 
   findMatchingRoute(method: string, path: string) {
