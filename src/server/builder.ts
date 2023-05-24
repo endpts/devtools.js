@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, rmSync } from "node:fs";
 import { join, basename } from "node:path";
+import { pathToFileURL } from "node:url";
 
 import * as esbuild from "esbuild";
 import { globby } from "globby";
@@ -37,7 +38,9 @@ export class Builder {
 
   // watches the route files directory for any changes and triggers a rebuild
   async watch() {
-    const routeFilePaths = await globby([`${this.routesSrcDir}/**/*.ts`]);
+    const routeFilePaths = await globby([
+      this.normalizePath(join(this.routesSrcDir, "**", "*.ts")),
+    ]);
 
     const ctx = await esbuild.context({
       entryPoints: routeFilePaths,
@@ -58,7 +61,7 @@ export class Builder {
     let routes: Route[] = [];
 
     const builtRouteFilePaths = await globby([
-      `${this.routesBuildOutputDir}/**/*.js`,
+      this.normalizePath(join(this.routesBuildOutputDir, "**", "*.js")),
     ]);
 
     // once esbuild generates the new route files, we need to use them
@@ -71,7 +74,10 @@ export class Builder {
       // Today, the memory usage will continue to grow as the route files are generated
       // with different hashes since the dynamic imports are not garbage collected
       // https://github.com/nodejs/loaders
-      const routeDefinition = await import(outputFilePath);
+      const routeDefinition = await import(
+        // ensures compatibility with Windows by converting C:\Users to file:///C:/Users
+        pathToFileURL(outputFilePath).toString()
+      );
       const { method, path: rawPath, handler } = routeDefinition.default;
 
       if (routes.some((r) => r.method === method && r.path.raw === rawPath)) {
@@ -131,5 +137,11 @@ export class Builder {
   // returns the routes build output directory
   getRoutesBuildOutputDir() {
     return this.routesBuildOutputDir;
+  }
+
+  // TODO: we can get rid of this once release 3.3.0 of fast-glob is out:
+  // https://github.com/mrmlnc/fast-glob/milestone/25
+  normalizePath(path: string) {
+    return process.platform === "win32" ? path.replace(/\\/g, "/") : path;
   }
 }

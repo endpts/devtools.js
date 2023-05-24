@@ -12,13 +12,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/endpts/node-devtools.git"
+    "url": "git+https://github.com/endpts/devtools.js.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/endpts/node-devtools/issues"
+    "url": "https://github.com/endpts/devtools.js/issues"
   },
-  "homepage": "https://github.com/endpts/node-devtools#readme",
+  "homepage": "https://github.com/endpts/devtools.js#readme",
   "devDependencies": {
     "@endpts/types": "^1.0.0",
     "@types/node": "^18.16.13",

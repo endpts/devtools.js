@@ -5,7 +5,7 @@ import { Watcher } from "../server/watcher.js";
 import { Logger } from "../logger.js";
 
 const logger = new Logger();
-const builder = new Builder(logger, "./routes", "./.ep");
+const builder = new Builder(logger, "routes", ".ep");
 const builderCleanup = await builder.watch();
 const router = new Router(logger, await builder.getRoutes());
 const server = new Server(logger, router.handleRequest);
