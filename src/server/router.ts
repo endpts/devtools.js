@@ -72,7 +72,7 @@ export class Router {
 
   findMatchingRoute(method: string, path: string) {
     return this.routes.find((r) => {
-      if (r.method === method) {
+      if (r.method === method || r.method === "ALL") {
         if (r.path.exactMatch && r.path.raw === path) {
           return r;
         } else if (r.path.regex?.test(path)) {

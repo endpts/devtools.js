@@ -1,7 +1,15 @@
 import type { EndptsRequest } from "./server/request.js";
 
 export interface Route {
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  method:
+    | "ALL"
+    | "GET"
+    | "POST"
+    | "PUT"
+    | "PATCH"
+    | "DELETE"
+    | "HEAD"
+    | "OPTIONS";
   path: Path;
   handler(req: EndptsRequest): Promise<Response>;
 }
