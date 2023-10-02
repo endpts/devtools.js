@@ -78,7 +78,19 @@ export class Builder {
         // ensures compatibility with Windows by converting C:\Users to file:///C:/Users
         pathToFileURL(outputFilePath).toString()
       );
-      const { method, path: rawPath, handler } = routeDefinition.default;
+
+      if (!routeDefinition.default) {
+        this.logger.error(
+          `Route file ${routeFilePath} does not have a default export`
+        );
+        return [];
+      }
+
+      const {
+        method = "ALL",
+        path: rawPath = "*",
+        handler,
+      } = routeDefinition.default;
 
       if (routes.some((r) => r.method === method && r.path.raw === rawPath)) {
         this.logger.error(`Duplicate routes detected: ${method} ${rawPath}`);
