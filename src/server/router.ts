@@ -77,6 +77,8 @@ export class Router {
           return r;
         } else if (r.path.regex?.test(path)) {
           return r;
+        } else if (r.path.raw === "*") {
+          return r;
         }
       }
     });
