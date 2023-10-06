@@ -39,7 +39,7 @@ export class Builder {
   // watches the route files directory for any changes and triggers a rebuild
   async watch() {
     const routeFilePaths = await globby([
-      this.normalizePath(join(this.routesSrcDir, "**", "*.ts")),
+      join(this.routesSrcDir, "**", "*.ts"),
     ]);
 
     const ctx = await esbuild.context({
@@ -61,7 +61,7 @@ export class Builder {
     let routes: Route[] = [];
 
     const builtRouteFilePaths = await globby([
-      this.normalizePath(join(this.routesBuildOutputDir, "**", "*.js")),
+      join(this.routesBuildOutputDir, "**", "*.js"),
     ]);
 
     // once esbuild generates the new route files, we need to use them
@@ -149,11 +149,5 @@ export class Builder {
   // returns the routes build output directory
   getRoutesBuildOutputDir() {
     return this.routesBuildOutputDir;
-  }
-
-  // TODO: we can get rid of this once release 3.3.0 of fast-glob is out:
-  // https://github.com/mrmlnc/fast-glob/milestone/25
-  normalizePath(path: string) {
-    return process.platform === "win32" ? path.replace(/\\/g, "/") : path;
   }
 }
