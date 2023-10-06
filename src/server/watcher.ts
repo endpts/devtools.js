@@ -39,7 +39,8 @@ export class Watcher {
   start() {
     watch(
       this.builder.getRoutesBuildOutputDir(),
-      { recursive: true },
+      // esbuild outputs route files in a flat structure, so we don't need to watch recursively
+      { recursive: false },
       this.debounce(this.reload)
     );
   }
